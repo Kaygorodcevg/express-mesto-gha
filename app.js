@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRoute = require('./routes/users');
+const cardsRoute = require('./routes/cards');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -20,12 +21,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use('/', userRoute);
+app.use('/', userRoute);
+app.use('/', cardsRoute);
 
 // app.post('/', (req, res) => {
 //   res.send(req.body);
 // });
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+app.listen(PORT);
