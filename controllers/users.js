@@ -38,7 +38,7 @@ module.exports.createUser = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({
-            message: 'Переданы некорректные данные при создании пользователя',
+            message: 'Переданы некорректные данные',
           });
       } else {
         res
@@ -70,7 +70,11 @@ module.exports.updateUser = (req, res) => {
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { avatar })
+  User.findByIdAndUpdate(req.user._id, { avatar }, {
+    new: true,
+    runValidators: true,
+    upsert: true,
+  })
     .then((user) => {
       if (!user) {
         res
