@@ -19,7 +19,7 @@ module.exports.deleteCard = (req, res) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(BAD_REQUEST).send({ message: 'Карточка не найдена' });
+        res.status(BAD_REQUEST).send({ message: 'Запрашиваемая карточка не найдена' });
       } else {
         res.send({ data: card });
       }
@@ -35,7 +35,7 @@ module.exports.likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(BAD_REQUEST).send({ message: 'Карточка не найдена' });
+        res.status(BAD_REQUEST).send({ message: 'Запрашиваемая карточка не найдена' });
       } else {
         res.send({ likes: card.likes });
       }
@@ -51,7 +51,7 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(BAD_REQUEST).send({ message: 'Карточка не найдена' });
+        res.status(BAD_REQUEST).send({ message: 'Запрашиваемая карточка не найдена' });
       } else {
         res.send({ likes: card.likes });
       }

@@ -1,22 +1,31 @@
 const User = require('../models/user');
-const { NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../utils/errors');
+const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../utils/errors');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' }));
+    .catch(() => res.status(INTERNAL_SERVER_ERROR)
+      .send({ message: 'Произошла ошибка на сервере' }));
 };
 
 module.exports.getUsersById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
+        res
+          .status(NOT_FOUND)
+          .send({ message: 'Запрашиваемый пользователь не найден' });
       } else {
         res.send({ data: user });
       }
     })
-    .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(BAD_REQUEST).send({ message: 'Некорректный id' });
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
+      }
+    });
 };
 
 module.exports.createUser = (req, res) => {
@@ -24,7 +33,19 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res
+          .status(BAD_REQUEST)
+          .send({
+            message: 'Переданы некорректные данные при создании пользователя',
+          });
+      } else {
+        res
+          .status(INTERNAL_SERVER_ERROR)
+          .send({ message: 'Произошла ошибка на сервере' });
+      }
+    });
 };
 
 module.exports.updateUser = (req, res) => {
@@ -33,12 +54,20 @@ module.exports.updateUser = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { name, about })
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
+        res
+          .status(NOT_FOUND)
+          .send({ message: 'Запрашиваемый пользователь не найден' });
       } else {
         res.send({ data: user });
       }
     })
-    .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
+      }
+    });
 };
 
 module.exports.updateAvatar = (req, res) => {
@@ -47,10 +76,18 @@ module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar })
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
+        res
+          .status(NOT_FOUND)
+          .send({ message: 'Запрашиваемый пользователь не найден' });
       } else {
         res.send({ data: user });
       }
     })
-    .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
+      }
+    });
 };

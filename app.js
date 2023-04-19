@@ -5,7 +5,7 @@ const userRoute = require('./routes/users');
 const cardsRoute = require('./routes/cards');
 
 const app = express();
-const { PORT = 3000 } = process.env;
+const { PORT = 3005 } = process.env;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,4 +28,6 @@ app.use('/', cardsRoute);
 //   res.send(req.body);
 // });
 
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`);
+});
