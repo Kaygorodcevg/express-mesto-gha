@@ -49,13 +49,8 @@ module.exports.likeCard = (req, res) => {
       upsert: true,
     },
   )
-    .then((card) => {
-      if (!card) {
-        res.status(NOT_FOUND).send({ message: 'Запрашиваемая карточка не найдена' });
-      } else {
-        res.send({ likes: card.likes });
-      }
-    })
+    .orFail(() => res.status(NOT_FOUND).send({ message: 'Запрашиваемая карточка не найден' }))
+    .then((likes) => res.send({ data: likes }))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Запрашиваемая карточка не найдена' });
@@ -75,13 +70,8 @@ module.exports.dislikeCard = (req, res) => {
       upsert: true,
     },
   )
-    .then((card) => {
-      if (!card) {
-        res.status(NOT_FOUND).send({ message: 'Запрашиваемая карточка не найдена' });
-      } else {
-        res.send({ likes: card.likes });
-      }
-    })
+    .orFail(() => res.status(NOT_FOUND).send({ message: 'Запрашиваемая карточка не найден' }))
+    .then((likes) => res.send({ data: likes }))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Запрашиваемая карточка не найдена' });
