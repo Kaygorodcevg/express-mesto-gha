@@ -28,6 +28,4 @@ app.use('*', (req, res) => {
   res.status(NOT_FOUND).send({ message: 'Запрашиваемая страница не найдена' });
 });
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+app.listen(PORT);
