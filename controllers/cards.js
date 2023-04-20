@@ -22,12 +22,12 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndDelete(req.params.cardId)
+  Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
         res.status(NOT_FOUND).send({ message: 'Запрашиваемая карточка не найдена' });
       } else {
-        res.send({ data: card });
+        res.send({ card });
       }
     })
     .catch((err) => {
@@ -45,8 +45,13 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then((card) => card.populate(['owner', 'likes']))
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (!card) {
+        res.status(NOT_FOUND).send({ message: 'Карточка с таким идентификатором не найдена' });
+      } else {
+        res.send({ likes: card.likes });
+      }
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Запрашиваемая карточка не найдена' });
