@@ -9,10 +9,9 @@ module.exports.getCards = (req, res) => {
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  const owner = req.user._id;
 
-  Card.create({ name, link, owner })
-    .then((card) => res.send({ data: card }))
+  Card.create({ name, link, owner: req.user._id })
+    .then((card) => res.send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
@@ -23,7 +22,7 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findById(req.params.cardId)
+  Card.findByIdAndDelete(req.params.cardId)
     .then((card) => {
       if (!card) {
         res.status(NOT_FOUND).send({ message: 'Запрашиваемая карточка не найдена' });
