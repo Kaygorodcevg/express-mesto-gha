@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const userRoute = require('./routes/users');
 const cardsRoute = require('./routes/cards');
 const { NOT_FOUND } = require('./utils/errors');
@@ -8,8 +7,7 @@ const { NOT_FOUND } = require('./utils/errors');
 const app = express();
 const { PORT = 3000 } = process.env;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -22,8 +20,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(userRoute);
-app.use(cardsRoute);
+app.use('/users', userRoute);
+app.use('/cards', cardsRoute);
 app.use('*', (req, res) => {
   res.status(NOT_FOUND).send({ message: 'Запрашиваемая страница не найдена' });
 });
