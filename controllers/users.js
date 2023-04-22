@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const { errorsHandler } = require('../utils/errosHandler');
-const { NOT_FOUND } = require('../utils/errors');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -10,15 +9,8 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUsersById = (req, res) => {
   User.findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        res
-          .status(NOT_FOUND)
-          .send({ message: 'Запрашиваемый пользователь не найден' });
-      } else {
-        res.send({ data: user });
-      }
-    })
+    .orFail()
+    .then((user) => res.send({ data: user }))
     .catch((err) => errorsHandler(err, res));
 };
 
@@ -47,33 +39,3 @@ module.exports.updateUser = (req, res) => {
 module.exports.updateAvatar = (req, res) => {
   updateUserInfo(req, res, req.body);
 };
-// module.exports.updateUser = (req, res) => {
-//   const { name, about } = req.body;
-
-//   User.findByIdAndUpdate(req.user._id, { name, about }, {
-//     new: true, // обработчик then получит на вход обновлённую запись
-//     runValidators: true, // данные будут валидированы перед изменением
-//   })
-//     .orFail()
-//     .then((userData) => res.send({ data: userData }))
-//     .catch((err) => errorsHandler(err, res));
-// };
-
-// module.exports.updateAvatar = (req, res) => {
-//   const { avatar } = req.body;
-
-//   User.findByIdAndUpdate(req.user._id, { avatar }, {
-//     new: true,
-//     runValidators: true,
-//   })
-//     .then((user) => {
-//       if (!user) {
-//         res
-//           .status(NOT_FOUND)
-//           .send({ message: 'Запрашиваемый пользователь не найден' });
-//       } else {
-//         res.send({ data: user });
-//       }
-//     })
-//     .catch((err) => errorsHandler(err, res));
-// };
