@@ -52,9 +52,10 @@ module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { name, about }, {
-    new: true,
+    new: true, // обработчик then получит на вход обновлённую запись
+    runValidators: true, // данные будут валидированы перед изменением
   })
-    .orFail(() => res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' }))
+    .orFail()
     .then((userData) => res.send({ data: userData }))
     .catch((err) => {
       if (err.name === 'CastError') {
