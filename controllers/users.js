@@ -52,8 +52,7 @@ module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { name, about }, {
-    new: true, // обработчик then получит на вход обновлённую запись
-    runValidators: true, // данные будут валидированы перед изменением
+    new: true,
   })
     .orFail(() => res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' }))
     .then((userData) => res.send({ data: userData }))
