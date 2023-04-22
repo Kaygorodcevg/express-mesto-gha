@@ -1,8 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const userRoute = require('./routes/users');
-const cardsRoute = require('./routes/cards');
-const { NOT_FOUND } = require('./utils/errors');
+const mainRouter = require('./routes');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -20,10 +18,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/users', userRoute);
-app.use('/cards', cardsRoute);
-app.use('*', (req, res) => {
-  res.status(NOT_FOUND).send({ message: 'Запрашиваемая страница не найдена' });
-});
+app.use('/', mainRouter);
 
 app.listen(PORT);
