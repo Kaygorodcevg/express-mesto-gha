@@ -30,33 +30,50 @@ module.exports.createUser = (req, res) => {
     .catch((err) => errorsHandler(err, res));
 };
 
-module.exports.updateUser = (req, res) => {
-  const { name, about } = req.body;
-
-  User.findByIdAndUpdate(req.user._id, { name, about }, {
-    new: true, // обработчик then получит на вход обновлённую запись
-    runValidators: true, // данные будут валидированы перед изменением
+const updateUserInfo = (req, res, newData) => {
+  User.findByIdAndUpdate(req.user._id, newData, {
+    new: true,
+    runValidators: true,
   })
     .orFail()
     .then((userData) => res.send({ data: userData }))
     .catch((err) => errorsHandler(err, res));
 };
 
-module.exports.updateAvatar = (req, res) => {
-  const { avatar } = req.body;
-
-  User.findByIdAndUpdate(req.user._id, { avatar }, {
-    new: true,
-    runValidators: true,
-  })
-    .then((user) => {
-      if (!user) {
-        res
-          .status(NOT_FOUND)
-          .send({ message: 'Запрашиваемый пользователь не найден' });
-      } else {
-        res.send({ data: user });
-      }
-    })
-    .catch((err) => errorsHandler(err, res));
+module.exports.updateUser = (req, res) => {
+  updateUserInfo(req, res, req.body);
 };
+
+module.exports.updateAvatar = (req, res) => {
+  updateUserInfo(req, res, req.body);
+};
+// module.exports.updateUser = (req, res) => {
+//   const { name, about } = req.body;
+
+//   User.findByIdAndUpdate(req.user._id, { name, about }, {
+//     new: true, // обработчик then получит на вход обновлённую запись
+//     runValidators: true, // данные будут валидированы перед изменением
+//   })
+//     .orFail()
+//     .then((userData) => res.send({ data: userData }))
+//     .catch((err) => errorsHandler(err, res));
+// };
+
+// module.exports.updateAvatar = (req, res) => {
+//   const { avatar } = req.body;
+
+//   User.findByIdAndUpdate(req.user._id, { avatar }, {
+//     new: true,
+//     runValidators: true,
+//   })
+//     .then((user) => {
+//       if (!user) {
+//         res
+//           .status(NOT_FOUND)
+//           .send({ message: 'Запрашиваемый пользователь не найден' });
+//       } else {
+//         res.send({ data: user });
+//       }
+//     })
+//     .catch((err) => errorsHandler(err, res));
+// };
