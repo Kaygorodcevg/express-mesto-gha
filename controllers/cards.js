@@ -37,6 +37,7 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+    .orFail()
     .then((card) => card.populate(['owner', 'likes']))
     .then((likes) => res.send({ data: likes }))
     .catch((err) => errorsHandler(err, res));
@@ -48,6 +49,7 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+    .orFail()
     .then((card) => card.populate(['owner', 'likes']))
     .then((likes) => res.send({ data: likes }))
     .catch((err) => errorsHandler(err, res));
