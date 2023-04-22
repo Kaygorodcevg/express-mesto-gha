@@ -33,11 +33,9 @@ const updateUserInfo = (req, res, newData) => {
 };
 
 module.exports.updateUser = (req, res) => {
-  const { name, about } = req.body;
-  updateUserInfo(req, res, name, about);
+  updateUserInfo(req, res, req.body_name, req.body_about);
 };
 
 module.exports.updateAvatar = (req, res) => {
-  const { avatar } = req.body;
-  updateUserInfo(req, res, avatar);
+  updateUserInfo(req, res, req.body_avatar);
 };
