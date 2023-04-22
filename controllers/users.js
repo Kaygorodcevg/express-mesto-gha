@@ -1,11 +1,11 @@
 const User = require('../models/user');
-const { BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR } = require('../utils/errors');
+const { errorsHandler } = require('../utils/errosHandler');
+const { NOT_FOUND } = require('../utils/errors');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(INTERNAL_SERVER_ERROR)
-      .send({ message: 'Произошла ошибка на сервере' }));
+    .catch((err) => errorsHandler(err, res));
 };
 
 module.exports.getUsersById = (req, res) => {
@@ -19,13 +19,7 @@ module.exports.getUsersById = (req, res) => {
         res.send({ data: user });
       }
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Некорректный id' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
-      }
-    });
+    .catch((err) => errorsHandler(err, res));
 };
 
 module.exports.createUser = (req, res) => {
@@ -33,19 +27,7 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res
-          .status(BAD_REQUEST)
-          .send({
-            message: 'Переданы некорректные данные',
-          });
-      } else {
-        res
-          .status(INTERNAL_SERVER_ERROR)
-          .send({ message: 'Произошла ошибка на сервере' });
-      }
-    });
+    .catch((err) => errorsHandler(err, res));
 };
 
 module.exports.updateUser = (req, res) => {
@@ -57,13 +39,7 @@ module.exports.updateUser = (req, res) => {
   })
     .orFail()
     .then((userData) => res.send({ data: userData }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
-      }
-    });
+    .catch((err) => errorsHandler(err, res));
 };
 
 module.exports.updateAvatar = (req, res) => {
@@ -82,11 +58,5 @@ module.exports.updateAvatar = (req, res) => {
         res.send({ data: user });
       }
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
-      }
-    });
+    .catch((err) => errorsHandler(err, res));
 };

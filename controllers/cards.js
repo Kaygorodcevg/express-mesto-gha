@@ -1,13 +1,14 @@
 const Card = require('../models/card');
+const { errorsHandler } = require('../utils/errosHandler');
 const {
-  BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR, CREATED,
+  NOT_FOUND, CREATED,
 } = require('../utils/errors');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .populate(['owner', 'likes'])
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' }));
+    .catch((err) => errorsHandler(err, res));
 };
 
 module.exports.createCard = (req, res) => {
@@ -15,13 +16,7 @@ module.exports.createCard = (req, res) => {
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(CREATED).send({ card }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
-      }
-    });
+    .catch((err) => errorsHandler(err, res));
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -33,13 +28,7 @@ module.exports.deleteCard = (req, res) => {
         res.send({ card });
       }
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Запрашиваемая карточка не найдена' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
-      }
-    });
+    .catch((err) => errorsHandler(err, res));
 };
 
 module.exports.likeCard = (req, res) => {
@@ -50,13 +39,7 @@ module.exports.likeCard = (req, res) => {
   )
     .orFail(() => res.status(NOT_FOUND).send({ message: 'Запрашиваемая карточка не найден' }))
     .then((likes) => res.send({ data: likes }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Запрашиваемая карточка не найдена' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
-      }
-    });
+    .catch((err) => errorsHandler(err, res));
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -67,11 +50,5 @@ module.exports.dislikeCard = (req, res) => {
   )
     .orFail(() => res.status(NOT_FOUND).send({ message: 'Запрашиваемая карточка не найден' }))
     .then((likes) => res.send({ data: likes }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Запрашиваемая карточка не найдена' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
-      }
-    });
+    .catch((err) => errorsHandler(err, res));
 };
