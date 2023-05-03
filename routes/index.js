@@ -7,10 +7,10 @@ const notFound = require('./notFound');
 const signIn = require('./signin');
 const signUp = require('./signup');
 
-mainRouter.use('/signin', auth, signIn);
-mainRouter.use('/signup', auth, signUp);
-mainRouter.use('/users', users);
-mainRouter.use('/cards', cards);
+mainRouter.use('/signin', signIn);
+mainRouter.use('/signup', signUp);
+mainRouter.use('/users', auth, users);
+mainRouter.use('/cards', auth, cards);
 mainRouter.use('*', notFound);
 
 module.exports = mainRouter;
