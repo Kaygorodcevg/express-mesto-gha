@@ -1,25 +1,24 @@
 const Card = require('../models/card');
-const { errorsHandler } = require('../utils/errosHandler');
 const {
   NOT_FOUND, CREATED,
 } = require('../utils/errors');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .populate(['owner', 'likes'])
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => errorsHandler(err, res));
+    .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(CREATED).send({ card }))
-    .catch((err) => errorsHandler(err, res));
+    .catch(next);
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove({ _id: req.params.cardId, owner: req.user._id })
     .then((card) => {
       if (!card) {
@@ -28,10 +27,10 @@ module.exports.deleteCard = (req, res) => {
         res.send({ card });
       }
     })
-    .catch((err) => errorsHandler(err, res));
+    .catch(next);
 };
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -40,10 +39,10 @@ module.exports.likeCard = (req, res) => {
     .orFail()
     .then((card) => card.populate(['owner', 'likes']))
     .then((likes) => res.send({ data: likes }))
-    .catch((err) => errorsHandler(err, res));
+    .catch(next);
 };
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
@@ -52,5 +51,5 @@ module.exports.dislikeCard = (req, res) => {
     .orFail()
     .then((card) => card.populate(['owner', 'likes']))
     .then((likes) => res.send({ data: likes }))
-    .catch((err) => errorsHandler(err, res));
+    .catch(next);
 };

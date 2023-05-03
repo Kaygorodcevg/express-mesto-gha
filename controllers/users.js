@@ -1,29 +1,28 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { errorsHandler } = require('../utils/errosHandler');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => errorsHandler(err, res));
+    .catch(next);
 };
 
-module.exports.getUsersById = (req, res) => {
+module.exports.getUsersById = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail()
     .then((user) => res.send({ data: user }))
-    .catch((err) => errorsHandler(err, res));
+    .catch(next);
 };
 
-module.exports.getUserInfo = (req, res) => {
+module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .orFail()
     .then((user) => res.send({ data: user }))
-    .catch((err) => errorsHandler(err, res));
+    .catch(next);
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -36,30 +35,30 @@ module.exports.createUser = (req, res) => {
       password: hash,
     }))
     .then((user) => res.send({ data: user }))
-    .catch((err) => errorsHandler(err, res));
+    .catch(next);
 };
 
-const updateUserInfo = (req, res, newData) => {
+const updateUserInfo = (req, res, newData, next) => {
   User.findByIdAndUpdate(req.user._id, newData, {
     new: true,
     runValidators: true,
   })
     .orFail()
     .then((userData) => res.send({ data: userData }))
-    .catch((err) => errorsHandler(err, res));
+    .catch(next);
 };
 
-module.exports.updateUser = (req, res) => {
+module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
-  updateUserInfo(req, res, { name, about });
+  updateUserInfo(req, res, { name, about }, next);
 };
 
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  updateUserInfo(req, res, { avatar });
+  updateUserInfo(req, res, { avatar }, next);
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -71,9 +70,5 @@ module.exports.login = (req, res) => {
       });
       res.send({ message: 'Well done' });
     })
-    .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
-    });
+    .catch(next);
 };
