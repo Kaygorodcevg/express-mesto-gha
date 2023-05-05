@@ -36,11 +36,17 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => {
-      const data = user.toObject();
-      delete data.password;
-      res.status(CREATE).send(data);
-    })
+    .then((user) => res.send({
+      data: {
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+        _id: user._id,
+      },
+    }),
+    res.status(CREATE),
+    )
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError());
