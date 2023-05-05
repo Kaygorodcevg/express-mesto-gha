@@ -1,5 +1,5 @@
-const { NOT_FOUND } = require('../utils/errors');
+const NotFoundError = require('../utils/NotFoundError');
 
-module.exports.notFound = (req, res) => {
-  res.status(NOT_FOUND).send({ message: 'Запрашиваемая страница не найдена' });
+module.exports.notFound = (req, res, next) => {
+  next(new NotFoundError('Запрашиваемая страница не найдена'));
 };

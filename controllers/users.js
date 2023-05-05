@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const ConflictError = require("../utils/ConflictError");
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -43,7 +44,12 @@ module.exports.createUser = (req, res, next) => {
         _id: user._id,
       },
     }))
-    .catch(next);
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictError());
+      }
+      next();
+    });
 };
 
 const updateUserInfo = (req, res, newData, next) => {

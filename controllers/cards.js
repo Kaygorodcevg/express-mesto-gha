@@ -13,6 +13,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
+    .then((card) => card.populate('owner'))
     .then((card) => res.status(CREATED).send({ card }))
     .catch(next);
 };
@@ -25,7 +26,7 @@ module.exports.deleteCard = (req, res, next) => {
           .then((cardData) => res.send({ data: cardData }))
           .catch(next);
       } else {
-        next(new ForbiddenError());
+        throw new ForbiddenError('Не хватает прав!');
       }
     })
     .catch(next);

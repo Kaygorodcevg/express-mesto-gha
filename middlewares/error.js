@@ -12,8 +12,9 @@ const {
 } = require('../utils/errors');
 const UnauthorizedError = require('../utils/UnauthorizedError');
 const ForbiddenError = require('../utils/ForbiddenError');
+const NotFoundError = require('../utils/NotFoundError');
 
-module.exports = (err, res, next) => {
+module.exports = ((err, res, next) => {
   if (err instanceof CastError) {
     return res.status(BAD_REQUEST).send({ message: 'Запрашиваемая информация не найдена' });
   }
@@ -24,6 +25,9 @@ module.exports = (err, res, next) => {
     return res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
   }
   if (err instanceof UnauthorizedError) {
+    return res.status(err.statusCode).send({ message: err.message });
+  }
+  if (err instanceof NotFoundError) {
     return res.status(err.statusCode).send({ message: err.message });
   }
   if (err instanceof ForbiddenError) {
@@ -37,4 +41,4 @@ module.exports = (err, res, next) => {
   res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
 
   return next();
-};
+});
