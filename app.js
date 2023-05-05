@@ -6,7 +6,7 @@ const mainRouter = require('./routes');
 const err = require('./middlewares/error');
 
 const app = express();
-const { PORT = 3000 } = process.env;
+const { PORT = 3005 } = process.env;
 
 app.use(express.json());
 app.use(cookieParser());
