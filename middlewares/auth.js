@@ -18,8 +18,8 @@ module.exports = (req, res, next) => {
       .status(UNAUTHORIZED)
       .send({ message: 'Необходима авторизация' });
   }
-
-  req.user = payload;
   // console.log('Payload:', payload);
+  req.user = payload;
+
   return next();
 };

@@ -11,7 +11,7 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUsersById = (req, res, next) => {
-  User.findById(req.params.userId)
+  User.findById(req.user._id)
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch(next);
