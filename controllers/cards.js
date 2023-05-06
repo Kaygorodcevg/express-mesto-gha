@@ -20,6 +20,7 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
+    .orFail()
     .then((card) => {
       if (card.owner.toString() === req.user._id) {
         Card.findByIdAndRemove(req.params.cardId)
@@ -32,6 +33,22 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .catch(next);
 };
+// module.exports.deleteCard = (req, res, next) => {
+//   Card.findById(req.params.cardId)
+//     .orFail()
+//     .then((card) => {
+//       Card.deleteOne({ _id: card._id, owner: req.user._id })
+//         .then((result) => {
+//           if (result.deletedCount === 0) {
+//             throw new ForbiddenError({ message: 'Карточка не принадлежит пользователю' });
+//           } else {
+//             res.send({ message: 'Карточка удалёна' });
+//           }
+//         })
+//         .catch(next);
+//     })
+//     .catch(next);
+// };
 
 module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(

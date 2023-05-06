@@ -11,7 +11,7 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUsersById = (req, res, next) => {
-  User.findById(req.user._id)
+  User.findById(req.params.userId)
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch(next);
@@ -77,7 +77,7 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       });
-      res.send({ email });
+      res.send({ message: 'Авторизация прошла успешно!' });
     })
     .catch(next);
 };
