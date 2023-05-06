@@ -1,8 +1,9 @@
 const { FORBIDDEN } = require('./errors');
 
 class ForbiddenError extends Error {
-  constructor(message) {
-    super(message);
+  constructor() {
+    super();
+    this.message = 'Недостаточно прав для этого действия';
     this.statusCode = FORBIDDEN;
   }
 }

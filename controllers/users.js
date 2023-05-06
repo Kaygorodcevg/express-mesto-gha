@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const ConflictError = require('../utils/ConflictError');
+// const { CREATE } = require('../utils/errors');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -25,9 +26,9 @@ module.exports.getUserInfo = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const {
-    name, about, avatar, email, password,
+    name, about, avatar, email,
   } = req.body;
-  bcrypt.hash(password, 10)
+  bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
       name,
       about,
@@ -35,15 +36,9 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => res.send({
-      data: {
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-        _id: user._id,
-      },
-    }))
+    .then((user) => User.findOne(user)
+      .orFail()
+      .then((userData) => res.send(userData)))
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError());

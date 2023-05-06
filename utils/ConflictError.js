@@ -1,8 +1,9 @@
 const { CONFLICT } = require('./errors');
 
 class ConflictError extends Error {
-  constructor(message) {
-    super(message);
+  constructor() {
+    super();
+    this.message = 'Пользователь с таким адресом уже существует';
     this.statusCode = CONFLICT;
   }
 }
