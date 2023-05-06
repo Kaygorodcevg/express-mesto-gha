@@ -26,7 +26,7 @@ module.exports.deleteCard = (req, res, next) => {
           .then((cardData) => res.send({ data: cardData }))
           .catch(next);
       } else {
-        throw new ForbiddenError('Не хватает прав!');
+        next(new ForbiddenError());
       }
     })
     .catch(next);
