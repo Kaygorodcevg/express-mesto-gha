@@ -11,7 +11,7 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUsersById = (req, res, next) => {
-  User.findById(req.user._id)
+  User.findById(req.params.userId)
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch(next);
@@ -37,7 +37,6 @@ module.exports.createUser = (req, res, next) => {
       password: hash,
     }))
     .then((user) => User.findOne(user)
-      .orFail()
       .then((userData) => res.send(userData)))
     .catch((err) => {
       if (err.code === 11000) {
@@ -78,7 +77,7 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       });
-      res.send({ message: 'Well done' });
+      res.send({ email });
     })
     .catch(next);
 };
