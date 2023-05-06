@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-const { errors } = require('celebrate');
+const validationErrors = require('celebrate').errors;
 const mainRouter = require('./routes');
 const err = require('./middlewares/error');
 
@@ -14,7 +14,7 @@ app.use(cookieParser());
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use('/', mainRouter);
-app.use(errors());
+app.use(validationErrors());
 app.use(err);
 
 app.listen(PORT, () => {

@@ -17,7 +17,7 @@ const ForbiddenError = require('../utils/ForbiddenError');
 const NotFoundError = require('../utils/NotFoundError');
 const ConflictError = require('../utils/ConflictError');
 
-module.exports = ((err, res, next) => {
+module.exports = ((err, req, res, next) => {
   if (err instanceof CastError) {
     return res.status(BAD_REQUEST).send({ message: 'Некорректный Id' });
   }
