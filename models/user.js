@@ -1,4 +1,4 @@
-const isEmail = require('validator/lib/isEmail');
+const validator = require('validator');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     validate: {
-      validator: (v) => isEmail(v),
+      validator: (value) => validator.isEmail(value),
       message: 'Неправильный формат',
     },
   },
