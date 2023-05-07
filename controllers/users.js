@@ -12,11 +12,12 @@ module.exports.getUsers = (req, res, next) => {
 module.exports.getUsersById = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail()
-    .then((user) => res.send(user))
+    .then((user) => res.send({ data: user }))
     .catch(next);
 };
 
 module.exports.getUserInfo = (req, res, next) => {
+  // console.log(req.user._id)
   User.findById(req.user._id)
     .orFail()
     .then((user) => res.send({ data: user }))
@@ -76,7 +77,7 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       });
-      res.send({ token });
+      res.send({ message: 'Авторизация прошла успешно' });
     })
     .catch(next);
 };

@@ -10,19 +10,13 @@ const {
 
 router.get('/', getUsers);
 
+router.get('/me', getUserInfo);
+
 router.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().alphanum().length(24),
   }),
 }), getUsersById);
-
-router.get('/me', celebrate({
-  query: Joi.object().keys({
-    _id: Joi.string().alphanum().length(24),
-  }),
-}), getUserInfo);
-
-// router.post('/', createUser);
 
 router.patch('/me', celebrate({
   body: Joi.object().keys({
