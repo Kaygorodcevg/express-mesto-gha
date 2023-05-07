@@ -32,7 +32,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'oksana-have-secrets');
+    payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
     throw new UnauthorizedError('Переданы неверные данные');
   }
