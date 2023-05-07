@@ -76,7 +76,7 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       });
-      res.send({ message: 'Авторизация прошла успешно!' });
+      res.send({ token });
     })
     .catch(next);
 };
