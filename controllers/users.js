@@ -40,9 +40,9 @@ module.exports.createUser = (req, res, next) => {
       .then((userData) => res.send(userData)))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError());
+        return next(new ConflictError());
       }
-      next();
+      return next();
     });
 };
 
