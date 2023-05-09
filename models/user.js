@@ -1,8 +1,8 @@
 const validator = require('validator');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-
 const UnauthorizedError = require('../utils/UnauthorizedError');
+const { REGULAR_EXPRESSION } = require('../utils/errors');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator(v) {
-        return /^https?:\/\/(www.)?(\d?[a-z-]+\.)+\/?\S*/mig.test(v);
+        return REGULAR_EXPRESSION.test(v);
       },
       message: 'Неправильный формат',
     },
@@ -39,7 +39,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 8,
     select: false,
   },
 });

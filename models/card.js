@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { REGULAR_EXPRESSION } = require('../utils/errors');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -12,7 +13,7 @@ const cardSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return /^https?:\/\/(www.)?(\d?[a-z-]+\.)+\/?\S*/mi.test(v);
+        return REGULAR_EXPRESSION.test(v);
       },
       message: 'Неправильный формат',
     },

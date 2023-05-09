@@ -6,6 +6,8 @@ const NOT_FOUND = 404;
 const CONFLICT = 409;
 const INTERNAL_SERVER_ERROR = 500;
 
+const REGULAR_EXPRESSION = /^https?:\/\/(www.)?(\d?[a-z-]+\.)+\/?\S*/mi;
+
 module.exports = {
   BAD_REQUEST,
   NOT_FOUND,
@@ -14,4 +16,5 @@ module.exports = {
   UNAUTHORIZED,
   CONFLICT,
   FORBIDDEN,
+  REGULAR_EXPRESSION,
 };
