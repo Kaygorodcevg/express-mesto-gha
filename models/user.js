@@ -2,7 +2,7 @@ const validator = require('validator');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../utils/UnauthorizedError');
-const { REGULAR_EXPRESSION } = require('../utils/RegularExpression');
+const REGULAR_EXPRESSION = require('../utils/RegularExpression');
 
 const userSchema = new mongoose.Schema({
   name: {
