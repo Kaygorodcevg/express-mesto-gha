@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
 const {
   getUsers,
   getUsersById,
@@ -7,28 +6,16 @@ const {
   updateUser,
   updateAvatar,
 } = require('../controllers/users');
+const { updateUserInfo, userId, updateUserAvatar } = require('../middlewares/validation');
 
 router.get('/', getUsers);
 
 router.get('/me', getUserInfo);
 
-router.get('/:userId', celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().required().hex().length(24),
-  }),
-}), getUsersById);
+router.get('/:userId', userId, getUsersById);
 
-router.patch('/me', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    about: Joi.string().required().min(2).max(30),
-  }),
-}), updateUser);
+router.patch('/me', updateUserInfo, updateUser);
 
-router.patch('/me/avatar', celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string().required().regex(/^https?:\/\/(www.)?(\d?[a-z-]+\.)+\/?\S*/mi),
-  }),
-}), updateAvatar);
+router.patch('/me/avatar', updateUserAvatar, updateAvatar);
 
 module.exports = router;
