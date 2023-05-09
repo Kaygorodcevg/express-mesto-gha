@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { REGULAR_EXPRESSION } = require('../utils/errors');
+const { REGULAR_EXPRESSION } = require('../utils/RegularExpression');
 
 const cardSchema = new mongoose.Schema({
   name: {
