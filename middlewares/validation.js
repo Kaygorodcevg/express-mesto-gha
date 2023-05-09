@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-const REGULAR_EXPRESSION = require('../utils/errors');
+const REGULAR_EXPRESSION = require('../utils/RegularExpression');
 
 module.exports.postCard = celebrate({
   body: Joi.object().keys({
