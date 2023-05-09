@@ -9,19 +9,35 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.getUsersById = (req, res, next) => {
-  User.findById(req.params.userId)
+// module.exports.getUsersById = (req, res, next) => {
+//   User.findById(req.params.userId)
+//     .orFail()
+//     .then((user) => res.send({ data: user }))
+//     .catch(next);
+// };
+
+// module.exports.getUserInfo = (req, res, next) => {
+//   // console.log(req.user._id)
+//   User.findById(req.user._id)
+//     .orFail()
+//     .then((user) => res.send({ data: user }))
+//     .catch(next);
+// };
+const findUserById = (req, res, userData, next) => {
+  User.findById(userData)
     .orFail()
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch(next);
 };
 
+module.exports.getUsersById = (req, res, next) => {
+  const userData = req.params.userId;
+  findUserById(req, res, userData, next);
+};
+
 module.exports.getUserInfo = (req, res, next) => {
-  // console.log(req.user._id)
-  User.findById(req.user._id)
-    .orFail()
-    .then((user) => res.send({ data: user }))
-    .catch(next);
+  const userData = req.user._id;
+  findUserById(req, res, userData, next);
 };
 
 module.exports.createUser = (req, res, next) => {
